@@ -42,10 +42,9 @@ fun EventsContext.pipe(): EventsContext = ForwardingEventsContext(this)
 
 class ForwardingEventsContext(
     private val sink: EventsContext
-) : EventsContext, ContextWithLifecycle<ForwardingEventsContext> {
+) : EventsContext, FinalizingContext {
     private val collector = CollectingEventsContext()
     override fun publishEvent(event: DomainEvent) = collector.publishEvent(event)
-    override fun initialize(): ForwardingEventsContext = this
     override fun finalize() = sink.publishEvents(collector.events())
 }
 

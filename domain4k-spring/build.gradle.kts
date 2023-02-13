@@ -3,8 +3,8 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
     kotlin("jvm")
     kotlin("plugin.spring") version "1.7.22"
-    kotlin("plugin.jpa") version "1.7.22"
 }
+
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
@@ -17,19 +17,13 @@ repositories {
 
 dependencies {
     implementation(project(":domain4k-core"))
-    implementation(project(":domain4k-spring"))
 
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework:spring-context")
 
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
-    implementation("com.h2database:h2")
-
-    implementation("org.javamoney:moneta:1.4.2")
     implementation("io.arrow-kt:arrow-core:1.1.5")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")

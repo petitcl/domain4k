@@ -1,4 +1,4 @@
-package com.petitcl.sample.domain4k.spring
+package com.petitcl.domain4k.spring
 
 import com.petitcl.domain4k.context.*
 import com.petitcl.domain4k.stereotype.DomainEvent
