@@ -14,8 +14,6 @@ class EventsTest {
         runAndCollectEvents(collector) {
             publishEvent(TestEvent("TestEvent1"))
             publishEvents(listOf(TestEvent("TestEvent2"), TestEvent("TestEvent3")))
-            val testWithEvents = TestWithEvents("TestWithEvents", listOf(TestEvent("TestEvent4")))
-            publishEventsOf(testWithEvents)
         }
         val events = collector.events()
 
@@ -23,8 +21,7 @@ class EventsTest {
             .containsExactly(
                 TestEvent("TestEvent1"),
                 TestEvent("TestEvent2"),
-                TestEvent("TestEvent3"),
-                TestEvent("TestEvent4")
+                TestEvent("TestEvent3")
             )
     }
 
@@ -76,8 +73,6 @@ class EventsTest {
         val events = runAndReturnEvents {
             publishEvent(TestEvent("TestEvent1"))
             publishEvents(listOf(TestEvent("TestEvent2"), TestEvent("TestEvent3")))
-            val testWithEvents = TestWithEvents("TestWithEvents", listOf(TestEvent("TestEvent4")))
-            publishEventsOf(testWithEvents)
         }
 
         assertThat(events)
@@ -85,7 +80,6 @@ class EventsTest {
                 TestEvent("TestEvent1"),
                 TestEvent("TestEvent2"),
                 TestEvent("TestEvent3"),
-                TestEvent("TestEvent4")
             )
     }
 

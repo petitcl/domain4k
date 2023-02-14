@@ -1,7 +1,6 @@
 package com.petitcl.domain4k.context
 
 import com.petitcl.domain4k.stereotype.DomainEvent
-import com.petitcl.domain4k.stereotype.WithEvents
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -12,7 +11,6 @@ import kotlin.contracts.contract
 interface EventsContext {
     fun publishEvent(event: DomainEvent)
     fun publishEvents(event: List<DomainEvent>) = event.forEach { publishEvent(it) }
-    fun publishEventsOf(withEvents: WithEvents<*>) = publishEvents(withEvents.events)
 
     companion object
 }

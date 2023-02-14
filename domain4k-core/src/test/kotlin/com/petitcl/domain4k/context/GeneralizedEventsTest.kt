@@ -1,8 +1,6 @@
 package com.petitcl.domain4k.context
 
 import com.petitcl.domain4k.fixtures.*
-import com.petitcl.domain4k.stereotype.DomainEvent
-import com.petitcl.domain4k.stereotype.WithEvents
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,8 +13,6 @@ class GeneralizedEventsTest {
         within(collector.pipe()) {
             publishEvent(TestEvent("TestEvent1"))
             publishEvents(listOf(TestEvent("TestEvent2"), TestEvent("TestEvent3")))
-            val testWithEvents = TestWithEvents("TestWithEvents", listOf(TestEvent("TestEvent4")))
-            publishEventsOf(testWithEvents)
         }
         val events = collector.events()
 
@@ -25,7 +21,6 @@ class GeneralizedEventsTest {
                 TestEvent("TestEvent1"),
                 TestEvent("TestEvent2"),
                 TestEvent("TestEvent3"),
-                TestEvent("TestEvent4")
             )
     }
 

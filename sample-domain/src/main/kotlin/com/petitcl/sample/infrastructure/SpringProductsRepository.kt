@@ -67,8 +67,7 @@ private fun ProductEntity.toDomain() =
         name = this.name,
         description = this.description,
         price = this.amount.toMoney(this.currency),
-        attributes = emptyList(),
-        events = emptyList()
+        attributes = emptyList()
     )
 
 private fun Product.toEntity() =

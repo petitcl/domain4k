@@ -1,43 +1,35 @@
 package com.petitcl.sample.domain
 
 import arrow.core.continuations.EffectScope
+import com.petitcl.domain4k.context.EventsContext
 import com.petitcl.domain4k.stereotype.AppError
 import com.petitcl.domain4k.stereotype.DomainEvent
 
 
-context(EffectScope<AppError>)
+context(EffectScope<AppError>, EventsContext)
 suspend fun Product.addAttribute(
     attribute: ProductAttribute,
 ): Product = this.copy(attributes = validateAttributes(attributes + attribute).bind())
-    .addEvent(AttributesAddedToProductEvent(sku, listOf(attribute)))
+    .also { publishEvent(AttributesAddedToProductEvent(sku, listOf(attribute))) }
 
-context(EffectScope<AppError>)
+context(EffectScope<AppError>, EventsContext)
 suspend fun Product.addAttributes(
     attributes: List<ProductAttribute>,
 ): Product = this.copy(attributes = validateAttributes(attributes + attributes).bind())
     .also { validateAttributes(it.attributes) }
-    .addEvent(AttributesAddedToProductEvent(sku, attributes))
+    .also { publishEvent(AttributesAddedToProductEvent(sku, attributes)) }
 
+context(EventsContext)
 fun Product.removeAttribute(
     attribute: ProductAttribute,
 ): Product = this.copy(attributes = attributes.filter { it.name != attribute.name })
-    .addEvent(AttributesRemovedFromProductEvent(sku, listOf(attribute)))
+    .also { publishEvent(AttributesRemovedFromProductEvent(sku, listOf(attribute))) }
 
+context(EventsContext)
 fun Product.removeAttributes(
     attributes: List<ProductAttribute>,
 ): Product = this.copy(attributes = attributes.filter { attributes.any { a -> a.name == it.name } })
-    .addEvent(AttributesRemovedFromProductEvent(sku, attributes))
-
-fun Product.replaceAttributes(
-    attributes: List<ProductAttribute>,
-): Product {
-    val attributeChanges = attributes.mapNotNull { attribute ->
-        this.attributes.firstOrNull { a -> a.name == attribute.name }
-            ?.let { oldAttribute -> AttributeChange(attribute.name, oldAttribute.value, attribute.value) }
-    }
-    return this.copy(attributes = attributes.map { attributes.firstOrNull { a -> a.name == it.name } ?: it })
-        .addEvent(AttributesUpdatedInProductEvent(sku, attributeChanges))
-}
+    .also { publishEvent(AttributesRemovedFromProductEvent(sku, attributes)) }
 
 data class AttributeChange(
     val name: String,

@@ -22,8 +22,7 @@ data class Product(
     val description: String,
     val price: MonetaryAmount,
     val attributes: List<ProductAttribute>,
-    override val events: List<DomainEvent>
-) : DomainEntityWithEvents<ProductSku, Product> {
+) : DomainEntity<ProductSku, Product> {
     init {
         validateAttributes(attributes)
     }
@@ -33,10 +32,6 @@ data class Product(
     override fun eq(other: Any?): Boolean = other != null
             && (other is Product)
             && (this.id == other.id)
-
-    override fun addEvent(event: DomainEvent): Product = copy(events = events + event)
-
-    override fun clearEvents(): Product = copy(events = emptyList())
 
     companion object
 }
