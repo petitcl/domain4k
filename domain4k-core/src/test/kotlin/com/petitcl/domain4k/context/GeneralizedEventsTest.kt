@@ -10,7 +10,7 @@ class GeneralizedEventsTest {
     @Test
     fun `within with piped events context should collect all events raised in block`() {
         val collector = CollectingEventsContext()
-        within(collector.pipe()) {
+        within(collector.lazy()) {
             publishEvent(TestEvent("TestEvent1"))
             publishEvents(listOf(TestEvent("TestEvent2"), TestEvent("TestEvent3")))
         }
@@ -27,7 +27,7 @@ class GeneralizedEventsTest {
     @Test
     fun `within with piped events context should publish events after the block is finished`() {
         val collector = TestEventsContext()
-        within(collector.pipe()) {
+        within(collector.lazy()) {
             publishEvent(TestEvent("TestEvent1"))
             publishEvent(TestEvent("TestEvent2"))
         }
@@ -44,7 +44,7 @@ class GeneralizedEventsTest {
     @Test
     fun `within with piped events context should allow to use additional contexts in block`() {
         val collector = CollectingEventsContext()
-        within(collector.pipe(), A(), B()) {
+        within(collector.lazy(), A(), B()) {
             publishEvent(TestEvent(doA()))
             publishEvent(TestEvent(doB()))
         }

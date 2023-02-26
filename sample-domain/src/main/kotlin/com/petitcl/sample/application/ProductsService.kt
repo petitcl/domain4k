@@ -2,8 +2,7 @@ package com.petitcl.sample.application
 
 import arrow.core.continuations.either
 import com.petitcl.domain4k.context.EventsContext
-import com.petitcl.domain4k.context.pipe
-import com.petitcl.domain4k.context.runAndCollectEvents
+import com.petitcl.domain4k.context.lazy
 import com.petitcl.domain4k.context.within
 import com.petitcl.domain4k.stereotype.ErrorOr
 import com.petitcl.sample.domain.*
@@ -24,7 +23,7 @@ class ProductsService(
 ) {
 
     suspend fun createProduct(request: CreateProductCommand): ErrorOr<Product> = either {
-        within(events.pipe()) {
+        within(events.lazy()) {
             val product = Product.newProduct(
                 sku = ProductSku(request.sku),
                 name = request.name,
