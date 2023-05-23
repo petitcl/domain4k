@@ -16,7 +16,6 @@ context(EffectScope<AppError>, EventsContext)
 suspend fun Product.addAttributes(
     attributes: List<ProductAttribute>,
 ): Product = this.copy(attributes = validateAttributes(attributes + attributes).bind())
-    .also { validateAttributes(it.attributes) }
     .also { publishEvent(AttributesAddedToProductEvent(sku, attributes)) }
 
 context(EventsContext)
@@ -45,9 +44,4 @@ data class AttributesAddedToProductEvent(
 data class AttributesRemovedFromProductEvent(
     val sku: ProductSku,
     val removedAttributes: List<ProductAttribute>,
-) : DomainEvent
-
-data class AttributesUpdatedInProductEvent(
-    val sku: ProductSku,
-    val updates: List<AttributeChange>,
 ) : DomainEvent

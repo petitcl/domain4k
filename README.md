@@ -9,6 +9,6 @@ More specifically, it provides a set of tiny and independent abstractions that y
 - Showcase delete entity in sample domain
 - Showcase more complex features in sample domain: cross entity interaction, etc..
 - Better logging context
-- WithEvents / Eq / Entity code generation
-- Error Handling utils with Arrow Either
+- Domain Probe showcase
+- Error Handling utils with Arrow Either (within + either effect?)
 - Refine events context functions: maybe delete them?
