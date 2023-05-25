@@ -30,7 +30,6 @@ fun fn5(r: String) : String = "$r - Result5"
 
 /**
  * Things to improve:
- * - context(EventsScope<String>) needs to include the return type, which is cumbersome
  * - functions need to be suspend functions
  */
 fun main() {
