@@ -27,8 +27,24 @@ class MyStateBuilder<S, A> : ProgramBuilder<MyState<S, A>, A>({
 
 }
 
+@DslMarker
+annotation class EventsDsl
+
+@EventsDsl
 interface EventsScope {
+
+    /**
+     * Emit zero or more events.
+     * The events will be appended in order to the list of events already emitted.
+     */
+    @EventsDsl
     suspend fun emit(vararg event: DomainEvent)
+
+    /**
+     * Emit a list containing zero or more events.
+     * The events will be appended in order to the list of events already emitted.
+     */
+    @EventsDsl
     suspend fun emit(events: List<DomainEvent>)
 }
 

@@ -21,7 +21,7 @@ suspend fun fn3(r: String) : String {
 
 context(EventsScope)
 suspend fun fn4(r: String) : String {
-    emit()
+    emit(Ev("10"))
     return "$r - Result4"
 }
 
