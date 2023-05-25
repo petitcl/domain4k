@@ -4,7 +4,6 @@ import com.petitcl.domain4k.stereotype.DomainEvent
 import fp.serrano.inikio.ProgramBuilder
 import fp.serrano.inikio.program
 
-
 sealed interface MyState<S, out A> {
     data class Finished<S, out A>(val result: A) : MyState<S, A>
     data class Get<S, out A>(val next: (S) -> MyState<S, A>) : MyState<S, A>
@@ -18,26 +17,36 @@ fun <S, A> MyState<S, A>.execute(initial: S): Pair<S, A> =
         is MyState.Put -> next().execute(new)
     }
 
-
-typealias EventsState<A> = MyState<List<DomainEvent>, A>
-class EventsScope<A> : ProgramBuilder<EventsState<A>, A>({
+class MyStateBuilder<S, A> : ProgramBuilder<MyState<S, A>, A>({
     result -> MyState.Finished(result)
 }) {
+    suspend fun get(): S = perform { s -> MyState.Get(s) }
 
-    private suspend fun get(): List<DomainEvent> = perform { s -> MyState.Get(s) }
-
-    private suspend fun put(new: List<DomainEvent>): Unit = performUnit { s ->
+    suspend fun put(new: S): Unit = performUnit { s ->
         MyState.Put(new, s) }
-
-    suspend fun emit(vararg event: DomainEvent) = put(get() + event)
-
-    suspend fun emit(events: List<DomainEvent>) = put(get() + events)
 
 }
 
-fun <A> events(block: suspend EventsScope<A>.() -> A): Pair<List<DomainEvent>, A>
-    = program(EventsScope(), block).execute(emptyList())
+interface EventsScope {
+    suspend fun emit(vararg event: DomainEvent)
+    suspend fun emit(events: List<DomainEvent>)
+}
 
+class EventsScopeImpl<A>(private val builder: MyStateBuilder<List<DomainEvent>, A>) : EventsScope {
+
+    override suspend fun emit(vararg event: DomainEvent) = builder.put(builder.get() + event)
+
+    override suspend fun emit(events: List<DomainEvent>) = builder.put(builder.get() + events)
+
+}
+
+fun <A> events(block: suspend EventsScope.() -> A): Pair<List<DomainEvent>, A> {
+    val builder = MyStateBuilder<List<DomainEvent>, A>()
+    return program(builder) {
+        val scope = EventsScopeImpl(builder)
+        scope.block()
+    }.execute(emptyList())
+}
 
 fun main() {
     val stateExample = increment().execute(0)

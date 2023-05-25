@@ -1,31 +1,31 @@
 package com.petitcl.domain4k.experimental
 
 
-context(EventsScope<String>)
+context(EventsScope)
 suspend fun fn1(): String {
     emit(Ev("1"), Ev("2"), Ev("3"))
     return "Result1"
 }
 
-context(EventsScope<String>)
+context(EventsScope)
 suspend fun fn2(r: String)  : String {
     emit(Ev("4"), Ev("5"), Ev("6"))
     return "$r - Result2"
 }
 
-context(EventsScope<String>)
+context(EventsScope)
 suspend fun fn3(r: String) : String {
     emit(Ev("7"), Ev("8"), Ev("9"))
     return "$r - Result3"
 }
 
-context(EventsScope<String>)
+context(EventsScope)
 suspend fun fn4(r: String) : String {
     emit()
     return "$r - Result4"
 }
 
-context(EventsScope<String>)
+context(EventsScope)
 fun fn5(r: String) : String = "$r - Result5"
 
 /**

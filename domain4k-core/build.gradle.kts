@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    api("io.arrow-kt:arrow-core:1.1.5")
+    api("io.arrow-kt:arrow-core:1.2.0-RC")
 
     implementation("com.github.serras.inikio:inikio-core:0.1")
 
