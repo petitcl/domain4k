@@ -11,10 +11,13 @@ java.targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
     api("io.arrow-kt:arrow-core:1.1.5")
+
+    implementation("com.github.serras.inikio:inikio-core:0.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
