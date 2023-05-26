@@ -16,14 +16,14 @@ fun <S, A> MyState<S, A>.execute(initial: S): Pair<S, A> =
         is MyState.Put -> next().execute(new)
     }
 
-// TODO: not sure why we need this annotation
-//@RestrictsSuspension
 class MyStateBuilder<S, A> : ProgramBuilder<MyState<S, A>, A>({
-        result -> MyState.Finished(result)
+    result -> MyState.Finished(result)
 }) {
     suspend fun get(): S = perform { s -> MyState.Get(s) }
 
-    suspend fun put(new: S): Unit = performUnit { s ->
-        MyState.Put(new, s) }
+    suspend fun put(new: S): Unit = performUnit {
+        s ->
+            MyState.Put(new, s)
+        }
 
 }

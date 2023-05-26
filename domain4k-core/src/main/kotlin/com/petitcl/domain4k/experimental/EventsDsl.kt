@@ -1,46 +1,68 @@
 package com.petitcl.domain4k.experimental
 
 import com.petitcl.domain4k.stereotype.DomainEvent
-import fp.serrano.inikio.program
 
 @DslMarker
 annotation class EventsDsl
 
 @EventsDsl
-interface EventsScope {
+interface EventsContext {
 
     /**
-     * Emit zero or more events.
+     * Publish zero or more events.
      * The events will be appended in order to the list of events already emitted.
      */
     @EventsDsl
-    suspend fun emit(vararg event: DomainEvent)
+    suspend fun publish(vararg event: DomainEvent)
 
     /**
-     * Emit a list containing zero or more events.
+     * Publish a list containing zero or more events.
      * The events will be appended in order to the list of events already emitted.
      */
     @EventsDsl
-    suspend fun emit(events: List<DomainEvent>)
+    suspend fun publish(events: List<DomainEvent>)
 }
 
-class EventsScopeImpl<A>(private val builder: MyStateBuilder<List<DomainEvent>, A>) : EventsScope {
+/**
+ * Base interface for classes that can collect and forward domain events.
+ */
+interface EventsCollector {
+    suspend fun publish(event: DomainEvent)
+}
 
-    override suspend fun emit(vararg event: DomainEvent) = builder.put(builder.get() + event)
+object EventsCollectors {
+    /**
+     * [EventsCollector] that does not do anything.
+     */
+    val noOp = NoOpEventsCollector
 
-    override suspend fun emit(events: List<DomainEvent>) = builder.put(builder.get() + events)
+    /**
+     * [EventsCollector] that collects events in memory and allows to retrieve them.
+     */
+    fun inMemory() = InMemoryEventsCollector()
+}
+
+object NoOpEventsCollector : EventsCollector {
+    override suspend fun publish(event: DomainEvent) = Unit
+}
+
+class InMemoryEventsCollector : EventsCollector {
+    private val _events = mutableListOf<DomainEvent>()
+
+    val events: List<DomainEvent>
+            get () = _events.toList()
+    override suspend fun publish(event: DomainEvent) {
+        _events.add(event)
+    }
 
 }
 
-fun <A> events(block: suspend EventsScope.() -> A): Pair<List<DomainEvent>, A> {
-    val builder = MyStateBuilder<List<DomainEvent>, A>()
-    return program(builder) {
-        val scope = EventsScopeImpl(builder)
-        scope.block()
-    }.execute(emptyList())
-}
+class EagerEventsCollector(
+    private val sink: EventsCollector,
+) : EventsCollector {
 
-fun main() {
-    val stateExample = increment().execute(0)
-    println(stateExample)
+    override suspend fun publish(event: DomainEvent) {
+        sink.publish(event)
+    }
+
 }
