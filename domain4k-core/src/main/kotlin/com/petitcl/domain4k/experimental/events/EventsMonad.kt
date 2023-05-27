@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.petitcl.domain4k.experimental
+package com.petitcl.domain4k.experimental.events
 
 import com.petitcl.domain4k.stereotype.DomainEvent
 

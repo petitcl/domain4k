@@ -1,4 +1,4 @@
-package com.petitcl.domain4k.experimental
+package com.petitcl.domain4k.experimental.events
 
 import com.petitcl.domain4k.stereotype.DomainEvent
 
@@ -53,16 +53,6 @@ class InMemoryEventsCollector : EventsCollector {
             get () = _events.toList()
     override suspend fun publish(event: DomainEvent) {
         _events.add(event)
-    }
-
-}
-
-class EagerEventsCollector(
-    private val sink: EventsCollector,
-) : EventsCollector {
-
-    override suspend fun publish(event: DomainEvent) {
-        sink.publish(event)
     }
 
 }

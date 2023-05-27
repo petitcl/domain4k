@@ -1,5 +1,7 @@
-package com.petitcl.domain4k.experimental
+package com.petitcl.domain4k.experimental.events
 
+import com.petitcl.domain4k.experimental.MyStateBuilder
+import com.petitcl.domain4k.experimental.execute
 import com.petitcl.domain4k.stereotype.DomainEvent
 import fp.serrano.inikio.program
 
@@ -10,13 +12,11 @@ class EventsContextImpl<A>(
 ) : EventsContext {
 
     override suspend fun publish(vararg event: DomainEvent) {
-        println(builder.get())
         builder.put(builder.get() + event)
         event.forEach { onEvent(it) }
     }
 
     override suspend fun publish(events: List<DomainEvent>) {
-        println(builder.get())
         builder.put(builder.get() + events)
         events.forEach { onEvent(it) }
     }
