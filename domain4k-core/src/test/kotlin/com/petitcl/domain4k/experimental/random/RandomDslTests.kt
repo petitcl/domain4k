@@ -50,7 +50,6 @@ class RandomDslTests : ShouldSpec({
         should("should generate using Kotlin's Default random by default") {
             val results = withRandom { List(100) {nextInt().toString() } }
 
-            println(results)
             results.distinct().size shouldBeGreaterThan 50
         }
 
@@ -59,7 +58,6 @@ class RandomDslTests : ShouldSpec({
                 List(10) { nextInt(100).toString() }
             }
 
-            println(results)
             results shouldBe listOf("45", "95", "64", "92", "73", "7", "34", "58", "97", "4")
         }
     }
